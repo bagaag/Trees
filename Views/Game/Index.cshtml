@@ -1,0 +1,16 @@
+@using Trees.Models;
+@{
+    ViewData["Title"] = "Trees";
+}
+<h2>@ViewData["Title"]</h2>
+
+@if (ViewData["Table"]==null) 
+{
+    <p>Would you like to play a game?</p>
+    <div><a href="@Url.Action("NewGame","Game")" class="btn btn-default">New Game</a></div>
+} 
+else 
+{
+    Table table = ViewData["Table"] as Table;
+    <p>@table.Players.Count players.</p>
+}

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Trees.Services;
 
 namespace Trees
 {
@@ -29,6 +30,20 @@ namespace Trees
         {
             // Add framework services.
             services.AddMvc();
+
+            // Adds a default in-memory implementation of IDistributedCache.
+            services.AddDistributedMemoryCache();
+
+            services.AddSession(options =>
+            {
+                // Set a short timeout for easy testing.
+                options.IdleTimeout = TimeSpan.FromSeconds(30*60);
+                    options.CookieHttpOnly = true;
+            });
+
+            // Trees services
+            services.AddSingleton<IGameData, RandomGameData>();
+            services.AddSingleton<IGamePlay, GamePlay>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -36,6 +51,8 @@ namespace Trees
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+            
+            app.UseSession();
 
             if (env.IsDevelopment())
             {
@@ -53,7 +70,7 @@ namespace Trees
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Game}/{action=Index}/{id?}");
             });
         }
     }
