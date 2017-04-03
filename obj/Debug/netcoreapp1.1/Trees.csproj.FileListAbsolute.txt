@@ -1,8 +1,0 @@
-/home/matt/Trees/bin/Debug/netcoreapp1.1/Trees.deps.json
-/home/matt/Trees/bin/Debug/netcoreapp1.1/Trees.runtimeconfig.json
-/home/matt/Trees/bin/Debug/netcoreapp1.1/Trees.runtimeconfig.dev.json
-/home/matt/Trees/bin/Debug/netcoreapp1.1/Trees.dll
-/home/matt/Trees/bin/Debug/netcoreapp1.1/Trees.pdb
-/home/matt/Trees/obj/Debug/netcoreapp1.1/Trees.AssemblyInfo.cs
-/home/matt/Trees/obj/Debug/netcoreapp1.1/Trees.dll
-/home/matt/Trees/obj/Debug/netcoreapp1.1/Trees.pdb
