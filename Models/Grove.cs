@@ -4,7 +4,11 @@ namespace Trees.Models
 {
     public class Grove 
     {
+        public Grove(Land land) 
+        {
+            Land = land;
+        }
         public Land Land { get; set; }
-        public List<Planting> Plantings { get; set; }
+        public List<Planting> Plantings { get; set; } = new List<Planting>();
     }
 }

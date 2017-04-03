@@ -1,0 +1,31 @@
+@using System.Collections.Generic
+@using Trees.Models
+@{
+    @model Grove
+}
+<div class="col-md-4">
+    <div class="panel panel-default">
+        <div class="panel-heading">@Model.Land.Name [@Model.Plantings.Count of @Model.Land.Spaces]</div>
+        <div class="panel-body">
+            @Html.Partial("Habitat", Model.Land.Habitat)
+            @if (Model.Plantings.Count > 0) 
+            {
+                <center><strong>Plantings</strong></center>
+            }
+            <div class="row">
+                @foreach (Planting planting in Model.Plantings) 
+                {
+                    <div class="col-md-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">@planting.Tree.Name</div>
+                            <div class="panel-body">
+                                <div>Player: @planting.Player.Name</div>
+                                @Html.Partial("Habitat", @planting.Tree.Habitat)
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,29 @@
+@using System.Collections.Generic;
+@using Trees.Models;
+@{
+    @model Stack<Event>
+}
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                 <div class="panel-heading">Event Deck</div>
+                 <div class="panel-body">
+                     <table class="table">
+                         <thead>
+                             <tr>
+                                 <th>Name</th>
+                                 <th>Description</th>
+                             </tr>
+                         </thead>
+                         <tbody>
+                             @foreach (Event ev in Model) 
+                             {
+                             <tr>
+                                 <td>@ev.Name</td>
+                                 <td><small>@ev.Description</small></td>
+                             </tr>
+                             }
+                         </tbody>
+                     </table>
+                 </div>
+            </div>
+        </div>

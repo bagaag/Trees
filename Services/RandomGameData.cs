@@ -24,13 +24,13 @@ namespace Trees.Services
                 {"Mountain","Field","Forest","City","Swamp","Coast","Pond","Wetlands"};
             for (int i = 0; i < 12; i++)
             {
-                Lands.Add(new Land(biomes[random.Next(0, biomes.Count - 1)], 5,
+                Lands.Add(new Land(biomes[random.Next(0, biomes.Count - 1)], random.Next(2,5),
                     new Habitat(R(), R(), R(), R())));
             }
             Events.Add(new Event("Flood", "Any tree with water below 4 perishes in the flood. Mountain habitats are spared."));
             Events.Add(new Event("Acorns!", "If you have an oak tree planted, plan another oak tree if you have one in your hand."));
             Events.Add(new Event("Wart Beetle", "The tree that takes the most insect damage in each land succombs to the wart beetle."));
-            Events.Add(new Event("Lightening Storm", "The most recently planted tree is hit by lightening and dies."));
+            Events.Add(new Event("Lightning Storm", "The most recently planted tree is hit by lightening and dies."));
             Events.Add(new Event("Snow!", "A heavy snow fells the tree with the most snow damage."));
             Events.Add(new Event("Blizzard!", "A blizzard brings heavy snow and high winds. Any tree with more than 5 wind and 5 snow damage is lost."));
             Events.Add(new Event("Rain", "A much needed rain falls. Swap your planting with the worst water match with any competing tree."));

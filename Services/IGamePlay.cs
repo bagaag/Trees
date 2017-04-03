@@ -11,5 +11,7 @@ namespace Trees.Services
         Table GetTable(Guid guid);
 
         void EndGame(Guid guid);
+
+        void PlantTree(Grove grove, Player player, Tree tree);
     }
 }

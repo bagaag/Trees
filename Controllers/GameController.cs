@@ -19,13 +19,14 @@ namespace Trees.Controllers
 
         public IActionResult Index()
         {
+            Table table = null;
             string sguid = HttpContext.Session.GetString(SessionKeyTable);
             if (sguid != null) 
             {
                 Guid tableGuid = new Guid(sguid);
-                ViewData["Table"] = _game.GetTable(tableGuid);
+                table = _game.GetTable(tableGuid);
             }
-            return View();
+            return View(table);
         }
 
         public IActionResult NewGame()
@@ -42,6 +43,34 @@ namespace Trees.Controllers
             };
             Guid gameId = _game.NewGame(players);
             HttpContext.Session.SetString(SessionKeyTable, gameId.ToString());
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult PlantTree()
+        {
+            int playerIx;
+            int handIx;
+            int groveIx;
+            string sguid;
+            if (Int32.TryParse(HttpContext.Request.Query["player_ix"], out playerIx))
+            {
+                if (Int32.TryParse(HttpContext.Request.Query["hand_ix"], out handIx))
+                {
+                    if (Int32.TryParse(HttpContext.Request.Query["grove_ix"], out groveIx))
+                    {
+                    sguid = HttpContext.Session.GetString(SessionKeyTable);
+                        if (sguid != null) 
+                        {
+                            Table table = _game.GetTable(new Guid(sguid));
+                            Player player = table.Players[playerIx];
+                            Tree tree = player.Hand[handIx];
+                            Grove grove = table.Groves[groveIx];
+                            _game.PlantTree(grove, player, tree);                            
+                        }            
+                    }
+                }
+            }
+
             return RedirectToAction("Index");
         }
     }

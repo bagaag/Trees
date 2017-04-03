@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Trees.Services;
 
@@ -5,13 +6,15 @@ namespace Trees.Models
 {
     public class Table
     {
-        public Table(List<Land> lands, List<Tree> trees, List<Event> events, List<Player> players) 
+        public Table(Guid guid, List<Land> lands, List<Tree> trees, List<Event> events, List<Player> players) 
         {            
             LandDeck = new Stack<Land>(lands);
             TreeDeck = new Stack<Tree>(trees);
             EventDeck = new Stack<Event>(events);
             Players = players;
+            Id = guid;
         }
+        public Guid Id { get; set; }
         public Stack<Land> LandDeck { get; private set; } 
         public Stack<Tree> TreeDeck { get; set; } 
         public Stack<Event> EventDeck { get; set; }

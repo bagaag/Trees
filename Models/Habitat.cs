@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 
 namespace Trees.Models 
 {
@@ -18,8 +17,6 @@ namespace Trees.Models
         public int Soil { get; set; }
 
         public int Temperature { get; set; }
-
-        public int Spaces { get; set; } = 1;
 
     }
 }

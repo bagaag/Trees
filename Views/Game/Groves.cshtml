@@ -1,0 +1,11 @@
+@using System.Collections.Generic
+@using Trees.Models
+@{
+    @model List<Grove>
+}
+<div class="row">
+    @foreach (Grove grove in Model) 
+    {
+        @Html.Partial("Grove", grove)
+    }
+</div>
