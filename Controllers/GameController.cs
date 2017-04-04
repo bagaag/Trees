@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Trees.Services;
 using Trees.Models;
+using Trees.Models.Stateful;
 using System.Collections.Generic;
 using System;
 using Microsoft.AspNetCore.Http;
@@ -17,7 +18,11 @@ namespace Trees.Controllers
             _game = game;
         }
 
-        public IActionResult Index()
+        /// <summary>
+        /// Returns the current table from the session guid, or null
+        /// </summary>
+        /// <returns></returns>
+        Table GetTable() 
         {
             Table table = null;
             string sguid = HttpContext.Session.GetString(SessionKeyTable);
@@ -26,7 +31,12 @@ namespace Trees.Controllers
                 Guid tableGuid = new Guid(sguid);
                 table = _game.GetTable(tableGuid);
             }
-            return View(table);
+            return table;
+        }
+
+        public IActionResult Index()
+        {
+            return View(GetTable());
         }
 
         public IActionResult NewGame()
@@ -65,12 +75,22 @@ namespace Trees.Controllers
                             Player player = table.Players[playerIx];
                             Tree tree = player.Hand[handIx];
                             Grove grove = table.Groves[groveIx];
-                            _game.PlantTree(grove, player, tree);                            
+                            _game.PlantTree(table, grove, player, tree);                            
                         }            
                     }
                 }
             }
 
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult CompleteTurn()
+        {
+            Table table = GetTable();
+            if (table != null) 
+            {
+                _game.CompleteTurn(table);
+            }
             return RedirectToAction("Index");
         }
     }

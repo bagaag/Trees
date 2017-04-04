@@ -1,4 +1,5 @@
-@using Trees.Models;
+@using Trees.Models
+@using Trees.Models.Stateful
 @{
     @model Table
 }
@@ -12,8 +13,10 @@ else
 {
     <h2>Game in Progress <small>{@Model.Id.ToString()}</small></h2>
     <h3>Players</h3>
-    @Html.Partial("Players", Model)
-
+    <div class="row">
+        @Html.Partial("Players", Model)
+        @Html.Partial("Turn", Model)
+    </div>
     <h3>Groves</h3>
     @Html.Partial("Groves", Model.Groves)
 

@@ -28,7 +28,7 @@ namespace Trees.Services
                     new Habitat(R(), R(), R(), R())));
             }
             Events.Add(new Event("Flood", "Any tree with water below 4 perishes in the flood. Mountain habitats are spared."));
-            Events.Add(new Event("Acorns!", "If you have an oak tree planted, plan another oak tree if you have one in your hand."));
+            Events.Add(new Event("Acorns!", "If you have an oak tree planted, plan another oak tree if you have one in your hand in addition to your normal turn."));
             Events.Add(new Event("Wart Beetle", "The tree that takes the most insect damage in each land succombs to the wart beetle."));
             Events.Add(new Event("Lightning Storm", "The most recently planted tree is hit by lightening and dies."));
             Events.Add(new Event("Snow!", "A heavy snow fells the tree with the most snow damage."));

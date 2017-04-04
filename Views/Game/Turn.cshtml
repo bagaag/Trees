@@ -1,0 +1,31 @@
+@using System.Collections.Generic
+@using Trees.Models
+@using Trees.Models.Stateful
+@{
+    @model Table
+    var currentEvent = Model.CurrentEvent;
+    var player = Model.GetCurrentPlayer();
+}
+<div class="col-md-4">
+    <div class="panel panel-default">
+        <div class="panel-heading"><strong>@player.Name's Turn</strong></div>
+        <div class="panel-body">
+            <h3>@currentEvent.Name</h3>
+            <p>@currentEvent.Description</p>
+            @if (Model.TurnLog.Count > 0)
+            {
+                <hr/>
+                <p><strong>Turn Log</strong></p>
+            }
+            <ul>
+                @foreach (var log in Model.TurnLog) 
+                {
+                    <li>@log</li>
+                }
+            </ul>
+            <hr/>
+            <p><a class="btn btn-default" href="@Url.Action("CompleteTurn","Game")">Complete Turn</a></p>
+        </div>
+    </div>
+</div>
+

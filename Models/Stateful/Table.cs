@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Trees.Services;
 
-namespace Trees.Models 
+namespace Trees.Models.Stateful
 {
     public class Table
     {
@@ -19,9 +18,17 @@ namespace Trees.Models
         public Stack<Tree> TreeDeck { get; set; } 
         public Stack<Event> EventDeck { get; set; }
         public List<Player> Players { get; set; } 
+        public int CurrentPlayer { get; set; }
+        public Player GetCurrentPlayer()
+        {
+            return this.Players[this.CurrentPlayer];
+        }
+        public Event CurrentEvent { get; set; }
         public List<Grove> Groves { get; set; } = new List<Grove>();
         public Stack<Tree> DeadTrees { get; set; } = new Stack<Tree>();
         public Stack<Event> PastEvents { get; set; } = new Stack<Event>();
+        public List<string> TurnLog { get; set; } = new List<string>();
+        public List<string> GameLog { get; set; } = new List<string>();
 
     }
 }

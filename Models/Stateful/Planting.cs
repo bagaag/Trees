@@ -1,4 +1,4 @@
-namespace Trees.Models 
+namespace Trees.Models.Stateful
 {
     public class Planting 
     {

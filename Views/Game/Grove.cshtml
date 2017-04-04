@@ -1,5 +1,5 @@
 @using System.Collections.Generic
-@using Trees.Models
+@using Trees.Models.Stateful
 @{
     @model Grove
 }
@@ -10,7 +10,7 @@
             @Html.Partial("Habitat", Model.Land.Habitat)
             @if (Model.Plantings.Count > 0) 
             {
-                <center><strong>Plantings</strong></center>
+                <p><center><strong>Plantings</strong></center></p>
             }
             <div class="row">
                 @foreach (Planting planting in Model.Plantings) 
@@ -20,7 +20,8 @@
                             <div class="panel-heading">@planting.Tree.Name</div>
                             <div class="panel-body">
                                 <div>Player: @planting.Player.Name</div>
-                                @Html.Partial("Habitat", @planting.Tree.Habitat)
+                                <p>@Html.Partial("Habitat", @planting.Tree.Habitat)</p>
+                                @Html.Partial("Damage", @planting.Tree.Damage)
                             </div>
                         </div>
                     </div>

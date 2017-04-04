@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Trees.Models;
+using Trees.Models.Stateful;
 
 namespace Trees.Services
 {
@@ -12,6 +13,8 @@ namespace Trees.Services
 
         void EndGame(Guid guid);
 
-        void PlantTree(Grove grove, Player player, Tree tree);
+        void PlantTree(Table table, Grove grove, Player player, Tree tree);
+
+        void CompleteTurn(Table table);
     }
 }

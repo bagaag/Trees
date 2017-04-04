@@ -1,51 +1,51 @@
 @using System.Collections.Generic
 @using Trees.Models
+@using Trees.Models.Stateful
 @{
     @model Table
-
 }
-<div class="row">
-    @for (int p=0; p<Model.Players.Count; p++)
-    {
-        var player = Model.Players[p];
-        <div class="col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">Player: <strong>@player.Name</strong></div>
-                <div class="panel-body">
-                    <center><strong>Trees in Hand</strong></center>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Name / Habitat</th>
-                                <th>Family</th>
-                                <th>Damage</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @for (int t=0; t<player.Hand.Count; t++)
-                            {
-                                Tree tree = player.Hand[t];
-                            <tr>
-                                <td>
-                                    @tree.Name 
-                                    <br/>
-                                    @tree.Family 
+@for (int p=0; p<Model.Players.Count; p++)
+{
+    var player = Model.Players[p];
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">Player: <strong>@player.Name</strong></div>
+            <div class="panel-body">
+                <center><strong>Trees in Hand</strong></center>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name / Habitat</th>
+                            <th>Family</th>
+                            <th>Damage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int t=0; t<player.Hand.Count; t++)
+                        {
+                            Tree tree = player.Hand[t];
+                        <tr>
+                            <td>
+                                @tree.Name 
+                                <br/>
+                                @tree.Family
+                                @if (p == Model.CurrentPlayer) {
                                     <br/>
                                     <span>Plant in Grove: <br/>[
                                     @for (int g=0; g<Model.Groves.Count; g++) 
                                     {
-                                        <a href="/Game/PlantTree?grove_ix=@g&hand_ix=@t&player_ix=@p"> @(g+1) </a>
+                                        <a href="@Url.Action("PlantTree","Game")?grove_ix=@g&hand_ix=@t&player_ix=@p"> @(g+1) </a>
                                     }
                                     ]</span>
-                                </td>
-                                <td>@Html.Partial("Habitat", @tree.Habitat)</td>
-                                <td>@Html.Partial("Damage", @tree.Damage)</td> 
-                            </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>    
-        </div>
-    }
-</div>
+                                } 
+                            </td>
+                            <td>@Html.Partial("Habitat", @tree.Habitat)</td>
+                            <td>@Html.Partial("Damage", @tree.Damage)</td> 
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>    
+    </div>
+}

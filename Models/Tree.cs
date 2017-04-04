@@ -18,7 +18,5 @@ namespace Trees.Models
 
         public Damage Damage { get; set; }
 
-        public Player Player { get; set; }
-
     }
 }

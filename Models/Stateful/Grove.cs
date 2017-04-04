@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Trees.Models 
+namespace Trees.Models.Stateful
 {
     public class Grove 
     {
