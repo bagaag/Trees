@@ -11,40 +11,43 @@
         <div class="panel panel-default">
             <div class="panel-heading">Player: <strong>@player.Name</strong></div>
             <div class="panel-body">
-                <center><strong>Trees in Hand</strong></center>
+                <div>Score: @player.Score</div>
+                <p><strong>Top Card</strong></p>
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Name / Habitat</th>
-                            <th>Family</th>
+                            <th>Name / Family</th>
+                            <th>Habitat</th>
                             <th>Damage</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @for (int t=0; t<player.Hand.Count; t++)
-                        {
+                        @if (player.Hand.Count > 0) {
+                            int t = 0;
                             Tree tree = player.Hand[t];
-                        <tr>
-                            <td>
-                                @tree.Name 
-                                <br/>
-                                @tree.Family
-                                @if (p == Model.CurrentPlayer) {
+                            <tr>
+                                <td>
+                                    @tree.Name 
                                     <br/>
-                                    <span>Plant in Grove: <br/>[
-                                    @for (int g=0; g<Model.Groves.Count; g++) 
-                                    {
-                                        <a href="@Url.Action("PlantTree","Game")?grove_ix=@g&hand_ix=@t&player_ix=@p"> @(g+1) </a>
-                                    }
-                                    ]</span>
-                                } 
-                            </td>
-                            <td>@Html.Partial("Habitat", @tree.Habitat)</td>
-                            <td>@Html.Partial("Damage", @tree.Damage)</td> 
-                        </tr>
+                                    @tree.Family
+                                    @if (p == Model.CurrentPlayer) {
+                                        <br/>
+                                        <span>Plant in Grove: <br/>[
+                                        @for (int g=0; g<Model.Groves.Count; g++) 
+                                        {
+                                            <a href="@Url.Action("PlantTree","Game")?grove_ix=@g&hand_ix=@t&player_ix=@p"> @(g+1) </a>
+                                        }
+                                        ]</span>
+                                    } 
+                                </td>
+                                <td>@Html.Partial("Habitat", @tree.Habitat)</td>
+                                <td>@Html.Partial("Damage", @tree.Damage)</td> 
+                            </tr>
                         }
                     </tbody>
                 </table>
+                @{ var remaining = player.Hand.Count - 1; }
+                <p>Remaining cards: @remaining</p>
             </div>
         </div>    
     </div>

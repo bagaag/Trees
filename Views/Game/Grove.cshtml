@@ -20,6 +20,7 @@
                             <div class="panel-heading">@planting.Tree.Name</div>
                             <div class="panel-body">
                                 <div>Player: @planting.Player.Name</div>
+                                <p>Score: @planting.Score</p>
                                 <p>@Html.Partial("Habitat", @planting.Tree.Habitat)</p>
                                 @Html.Partial("Damage", @planting.Tree.Damage)
                             </div>

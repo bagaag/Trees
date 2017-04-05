@@ -9,5 +9,6 @@ namespace Trees.Models.Stateful
         }
         public Tree Tree { get; set; }
         public Player Player { get; set; }
+        public int Score { get; set; }
     }
 }

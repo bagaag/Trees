@@ -47,7 +47,7 @@ namespace Trees.Services
 
         private int R()
         {
-            return random.Next(1, 10);
+            return random.Next(1, 4);
         }
         public List<Tree> Trees { get; private set; } = new List<Tree>();
         public List<Event> Events { get; private set; } = new List<Event>();

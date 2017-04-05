@@ -7,10 +7,12 @@ namespace Trees.Services
 {
     public class GamePlay : IGamePlay
     {
-        private readonly IGameData _gameData;
-        private Dictionary<Guid,Table> _tables;
         private const int StarterGroveCount = 3;
         private const int TreeHandCount = 5;
+        private const int PlantingValue = 10;
+
+        private readonly IGameData _gameData;
+        private Dictionary<Guid,Table> _tables;
         
         public GamePlay(IGameData gameData)
         {
@@ -76,6 +78,13 @@ namespace Trees.Services
             _tables.Remove(guid);
         }
 
+        /// <summary>
+        /// Moves a tree from player's hand to a Land on the table and updates scores
+        /// </summary>
+        /// <param name="table">current game table</param>
+        /// <param name="grove">grove to plant in</param>
+        /// <param name="player">player's hand to take tree from</param>
+        /// <param name="tree">tree to plant</param>
         public void PlantTree(Table table, Grove grove, Player player, Tree tree)
         {
             // confirm an open space
@@ -85,6 +94,9 @@ namespace Trees.Services
                 player.Hand.Remove(tree);
                 player.Plantings.Add(planting);
                 grove.Plantings.Add(planting);
+                // update scores
+                ScorePlanting(grove, planting);
+                ScorePlayer(player);
                 // record the turn event
                 table.TurnLog.Add($"{player.Name} planted a {tree.Name} in the {grove.Land.Name}");
             }
@@ -112,6 +124,36 @@ namespace Trees.Services
             table.TurnLog.Clear();
             // record the turn event
             LogEventDraw(table.TurnLog, table.GetCurrentPlayer().Name, table.CurrentEvent.Name);
+        }
+
+        // PROTECTED METHODS
+
+        /// <summary>
+        /// Sets the score of the planting by calculating the sum of habitat value differences between
+        /// the land and the tree. Lower score is better.
+        /// </summary>
+        /// <param name="grove"></param>
+        /// <param name="planting"></param>
+        void ScorePlanting(Grove grove, Planting planting)
+        {
+            int score = 0;
+            Habitat g = grove.Land.Habitat;
+            Habitat p = planting.Tree.Habitat;
+            score += Math.Abs(g.Soil - p.Soil);
+            score += Math.Abs(g.Sun - p.Sun);
+            score += Math.Abs(g.Temperature - p.Temperature);
+            score += Math.Abs(g.Water - p.Water);
+            planting.Score = PlantingValue - score;
+        }
+
+        /// <summary>
+        /// Sums the scores of each planting and assigns to the player's score. Lower score is better.
+        /// </summary>
+        /// <param name="player"></param>
+        void ScorePlayer(Player player) 
+        {
+            player.Score = 0;
+            player.Plantings.ForEach(p => { player.Score += p.Score; });
         }
 
         void LogEventDraw(List<string> log, string playerName, string eventName) 

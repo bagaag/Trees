@@ -11,5 +11,6 @@ namespace Trees.Models.Stateful
         public string Name { get; set; }
         public List<Tree> Hand { get; set; }  = new List<Tree>();
         public List<Planting> Plantings { get; set; } = new List<Planting>();
+        public int Score { get; set; } = 0;
     }
 }
