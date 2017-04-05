@@ -1,0 +1,5 @@
+TODO:
+- Replace competitor tree
+- Replenish empty hand
+- Event enforcement
+- Add land when <3 available
