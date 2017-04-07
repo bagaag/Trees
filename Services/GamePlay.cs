@@ -54,6 +54,7 @@ namespace Trees.Services
 
             // setup first turn
             table.CurrentPlayer = 0;
+            UpdateReplacementStatuses(table);
             table.CurrentEvent = table.EventDeck.Pop();
             LogEventDraw(table.TurnLog, table.GetCurrentPlayer().Name, table.CurrentEvent.Name);
 
@@ -94,9 +95,10 @@ namespace Trees.Services
                 player.Hand.Remove(tree);
                 player.Plantings.Add(planting);
                 grove.Plantings.Add(planting);
-                // update scores
+                // update table
                 ScorePlanting(grove, planting);
                 ScorePlayer(player);
+                UpdateReplacementStatuses(table);
                 // record the turn event
                 table.TurnLog.Add($"{player.Name} planted a {tree.Name} in the {grove.Land.Name}");
             }
@@ -119,6 +121,8 @@ namespace Trees.Services
             } 
             // take the next event card
             table.CurrentEvent = table.EventDeck.Pop();
+            // update replacement statuses
+            UpdateReplacementStatuses(table);
             // clear the turn log
             table.GameLog.AddRange(table.TurnLog);
             table.TurnLog.Clear();
@@ -126,7 +130,72 @@ namespace Trees.Services
             LogEventDraw(table.TurnLog, table.GetCurrentPlayer().Name, table.CurrentEvent.Name);
         }
 
+        /// <summary>
+        /// Replaces another player's planting with the current player's top tree card. 
+        /// Moves the replaced tree to the Dead Trees stack and updates the replaced 
+        /// tree's player's score.
+        /// </summary>
+        /// <param name="table">Current game table</param>
+        /// <param name="targetGrove">Grove containing planting being replaced</param>
+        /// <param name="targetPlanting">Planting being replaced</param>
+        public void ReplaceTree(Table table, Grove targetGrove, Planting targetPlanting)
+        {
+            Player currentPlayer = table.GetCurrentPlayer();
+            Tree testTree = currentPlayer.Hand[0];
+            Planting replacementPlanting = new Planting(currentPlayer, testTree);
+            // find and replace the planting in the grove
+            for (int i = 0; i < targetGrove.Plantings.Count; i++) 
+            {
+                if (targetGrove.Plantings[i] == targetPlanting)
+                {
+                    targetGrove.Plantings[i] = replacementPlanting;
+                    break;
+                }
+            }
+            // update current player
+            currentPlayer.Hand.RemoveAt(0);
+            currentPlayer.Plantings.Add(replacementPlanting);
+            // remove replaced planting
+            targetPlanting.Player.Plantings.Remove(targetPlanting);
+            table.DeadTrees.Push(targetPlanting.Tree);
+            // update scores
+            ScorePlanting(targetGrove, replacementPlanting);
+            ScorePlayer(targetPlanting.Player);
+            ScorePlayer(currentPlayer);
+        }
+
         // PROTECTED METHODS
+
+        /// <summary>
+        /// Updates existing plantings with status indicating whether each can 
+        /// be replaced by the current player's top tree card.
+        /// </summary>
+        /// <param name="tree">current player's tree to test</param>
+        /// <param name="table">current game table</param>
+        void UpdateReplacementStatuses(Table table) 
+        {
+            Player currentPlayer = table.GetCurrentPlayer();
+            Tree testTree = currentPlayer.Hand[0];
+            Planting testPlanting = new Planting(currentPlayer, testTree);
+            foreach (Grove grove in table.Groves)
+            {
+                // get the test tree's score for this grove
+                ScorePlanting(grove, testPlanting);
+                foreach (Planting planting in grove.Plantings) 
+                {
+                    // can't replace own tree or if there are open plantings available 
+                    if (planting.Player == currentPlayer || grove.Plantings.Count < grove.Land.Spaces) 
+                    {
+                        planting.CanBeReplaced = false;
+                    } 
+                    else 
+                    {
+                        // can replace if test tree's score is more than existing tree
+                        planting.CanBeReplaced = (testPlanting.Score > planting.Score);
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Sets the score of the planting by calculating the sum of habitat value differences between

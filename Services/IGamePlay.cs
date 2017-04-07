@@ -15,6 +15,8 @@ namespace Trees.Services
 
         void PlantTree(Table table, Grove grove, Player player, Tree tree);
 
+        void ReplaceTree(Table table, Grove targetGrove, Planting targetPlanting);
+
         void CompleteTurn(Table table);
     }
 }

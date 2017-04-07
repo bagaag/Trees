@@ -1,5 +1,6 @@
 TODO:
-- Replace competitor tree
+- Refactor planting controller method to not require current player context
+- Display potential score for each grove based on current player's top tree
 - Replenish empty hand
-- Event enforcement
 - Add land when <3 available
+- Event enforcement

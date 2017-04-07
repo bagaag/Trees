@@ -4,8 +4,53 @@
     @model List<Grove>
 }
 <div class="row">
+    @{ int g = 0; }
     @foreach (Grove grove in Model) 
     {
-        @Html.Partial("Grove", grove)
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    @grove.Land.Name [@grove.Plantings.Count of @grove.Land.Spaces]
+                    <span style="float:right;">
+                        <a href="#">Plant</a>
+                    </span>
+                </div>
+                <div class="panel-body">
+                    @Html.Partial("Habitat", grove.Land.Habitat)
+                    @if (grove.Plantings.Count > 0) 
+                    {
+                        <p><center><strong>Plantings</strong></center></p>
+                    }
+                    <div class="row">
+                        @{ int p = 0; }
+                        @foreach (Planting planting in grove.Plantings) 
+                        {
+                            <div class="col-md-6">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <span style="float:right;">
+                                            @if (planting.CanBeReplaced)
+                                            {
+                                                <a href="@Url.Action("ReplaceTree","Game")?grove_ix=@g&planting_ix=@p">R</a>
+                                            }
+                                            <a href="#">X</a>
+                                        </span>
+                                        @planting.Tree.Name
+                                    </div>
+                                    <div class="panel-body">
+                                        <div>Player: @planting.Player.Name</div>
+                                        <p>Score: @planting.Score</p>
+                                        <p>@Html.Partial("Habitat", @planting.Tree.Habitat)</p>
+                                        @Html.Partial("Damage", @planting.Tree.Damage)
+                                    </div>
+                                </div>
+                            </div>
+                            p++;
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        g++;
     }
 </div>
