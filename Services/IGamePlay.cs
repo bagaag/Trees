@@ -13,7 +13,7 @@ namespace Trees.Services
 
         void EndGame(Guid guid);
 
-        void PlantTree(Table table, Grove grove, Player player, Tree tree);
+        void PlantTree(Table table, Grove grove);
 
         void ReplaceTree(Table table, Grove targetGrove, Planting targetPlanting);
 

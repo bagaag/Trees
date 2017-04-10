@@ -1,19 +1,22 @@
 @using System.Collections.Generic
 @using Trees.Models.Stateful
 @{
-    @model List<Grove>
+    @model Table
 }
 <div class="row">
     @{ int g = 0; }
-    @foreach (Grove grove in Model) 
+    @foreach (Grove grove in Model.Groves) 
     {
         <div class="col-md-4">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     @grove.Land.Name [@grove.Plantings.Count of @grove.Land.Spaces]
+                    @if (grove.Plantings.Count < grove.Land.Spaces)
+                    {
                     <span style="float:right;">
-                        <a href="#">Plant</a>
+                        <a href="@Url.Action("PlantTree","Game")?grove_ix=@g">Plant</a>
                     </span>
+                    }
                 </div>
                 <div class="panel-body">
                     @Html.Partial("Habitat", grove.Land.Habitat)

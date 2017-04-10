@@ -4,12 +4,15 @@
 @{
     @model Table
 }
-@for (int p=0; p<Model.Players.Count; p++)
+@foreach (var player in Model.Players)
 {
-    var player = Model.Players[p];
     <div class="col-md-4">
         <div class="panel panel-default">
-            <div class="panel-heading">Player: <strong>@player.Name</strong></div>
+            @{
+                var headingClass = "";
+                if (player == Model.GetCurrentPlayer()) { headingClass = "current-player"; }
+            }
+            <div class="@headingClass panel-heading">Player: <strong>@player.Name</strong></div>
             <div class="panel-body">
                 <p>Score: @player.Score</p>
                 <p><strong>Top Card</strong></p>
@@ -30,15 +33,6 @@
                                     @tree.Name 
                                     <br/>
                                     @tree.Family
-                                    @if (p == Model.CurrentPlayer) {
-                                        <br/>
-                                        <span>Plant in Grove: <br/>[
-                                        @for (int g=0; g<Model.Groves.Count; g++) 
-                                        {
-                                            <a href="@Url.Action("PlantTree","Game")?grove_ix=@g&hand_ix=@t&player_ix=@p"> @(g+1) </a>
-                                        }
-                                        ]</span>
-                                    } 
                                 </td>
                                 <td>@Html.Partial("Habitat", @tree.Habitat)</td>
                                 <td>@Html.Partial("Damage", @tree.Damage)</td> 

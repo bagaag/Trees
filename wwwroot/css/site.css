@@ -35,3 +35,7 @@ textarea {
         display: none;
     }
 }
+
+.current-player {
+    background-color: #69ef5d !important;
+}

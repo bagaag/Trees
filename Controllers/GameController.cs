@@ -59,26 +59,17 @@ namespace Trees.Controllers
         public IActionResult PlantTree()
         {
             int playerIx;
-            int handIx;
             int groveIx;
             string sguid;
-            if (Int32.TryParse(HttpContext.Request.Query["player_ix"], out playerIx))
+            if (Int32.TryParse(HttpContext.Request.Query["grove_ix"], out groveIx))
             {
-                if (Int32.TryParse(HttpContext.Request.Query["hand_ix"], out handIx))
+            sguid = HttpContext.Session.GetString(SessionKeyTable);
+                if (sguid != null) 
                 {
-                    if (Int32.TryParse(HttpContext.Request.Query["grove_ix"], out groveIx))
-                    {
-                    sguid = HttpContext.Session.GetString(SessionKeyTable);
-                        if (sguid != null) 
-                        {
-                            Table table = _game.GetTable(new Guid(sguid));
-                            Player player = table.Players[playerIx];
-                            Tree tree = player.Hand[handIx];
-                            Grove grove = table.Groves[groveIx];
-                            _game.PlantTree(table, grove, player, tree);                            
-                        }            
-                    }
-                }
+                    Table table = _game.GetTable(new Guid(sguid));
+                    Grove grove = table.Groves[groveIx];
+                    _game.PlantTree(table, grove);                            
+                }            
             }
 
             return RedirectToAction("Index");

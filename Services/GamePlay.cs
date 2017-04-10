@@ -86,13 +86,15 @@ namespace Trees.Services
         /// <param name="grove">grove to plant in</param>
         /// <param name="player">player's hand to take tree from</param>
         /// <param name="tree">tree to plant</param>
-        public void PlantTree(Table table, Grove grove, Player player, Tree tree)
+        public void PlantTree(Table table, Grove grove)
         {
+            var player = table.GetCurrentPlayer();
+            var tree = player.Hand[0];
             // confirm an open space
             if (grove.Land.Spaces > grove.Plantings.Count) {
                 // plant the tree
                 Planting planting = new Planting(player, tree);
-                player.Hand.Remove(tree);
+                player.Hand.RemoveAt(0);
                 player.Plantings.Add(planting);
                 grove.Plantings.Add(planting);
                 // update table
