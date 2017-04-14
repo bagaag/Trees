@@ -10,5 +10,6 @@ namespace Trees.Models.Stateful
         }
         public Land Land { get; set; }
         public List<Planting> Plantings { get; set; } = new List<Planting>();
+        public int CurrentPlayerPotentialScore { get; set; } = 0;
     }
 }

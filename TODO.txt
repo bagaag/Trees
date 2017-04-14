@@ -1,6 +1,4 @@
 TODO:
-- Reformat grove descr to two cols, move planting count to habitat and add current player's tree score
-- Display potential score for each grove based on current player's top tree
 - Replenish empty hand
 - Add land when <3 available
 - Event enforcement

@@ -55,6 +55,7 @@ namespace Trees.Services
             // setup first turn
             table.CurrentPlayer = 0;
             UpdateReplacementStatuses(table);
+            SetCurrentPlayerPotentialScores(table);
             table.CurrentEvent = table.EventDeck.Pop();
             LogEventDraw(table.TurnLog, table.GetCurrentPlayer().Name, table.CurrentEvent.Name);
 
@@ -100,6 +101,7 @@ namespace Trees.Services
                 // update table
                 ScorePlanting(grove, planting);
                 ScorePlayer(player);
+                SetCurrentPlayerPotentialScores(table);            
                 UpdateReplacementStatuses(table);
                 // record the turn event
                 table.TurnLog.Add($"{player.Name} planted a {tree.Name} in the {grove.Land.Name}");
@@ -123,8 +125,6 @@ namespace Trees.Services
             } 
             // take the next event card
             table.CurrentEvent = table.EventDeck.Pop();
-            // update replacement statuses
-            UpdateReplacementStatuses(table);
             // clear the turn log
             table.GameLog.AddRange(table.TurnLog);
             table.TurnLog.Clear();
@@ -164,6 +164,8 @@ namespace Trees.Services
             ScorePlanting(targetGrove, replacementPlanting);
             ScorePlayer(targetPlanting.Player);
             ScorePlayer(currentPlayer);
+            SetCurrentPlayerPotentialScores(table);
+            UpdateReplacementStatuses(table);
         }
 
         // PROTECTED METHODS
@@ -177,12 +179,8 @@ namespace Trees.Services
         void UpdateReplacementStatuses(Table table) 
         {
             Player currentPlayer = table.GetCurrentPlayer();
-            Tree testTree = currentPlayer.Hand[0];
-            Planting testPlanting = new Planting(currentPlayer, testTree);
             foreach (Grove grove in table.Groves)
             {
-                // get the test tree's score for this grove
-                ScorePlanting(grove, testPlanting);
                 foreach (Planting planting in grove.Plantings) 
                 {
                     // can't replace own tree or if there are open plantings available 
@@ -193,7 +191,7 @@ namespace Trees.Services
                     else 
                     {
                         // can replace if test tree's score is more than existing tree
-                        planting.CanBeReplaced = (testPlanting.Score > planting.Score);
+                        planting.CanBeReplaced = (grove.CurrentPlayerPotentialScore > planting.Score);
                     }
                 }
             }
@@ -215,6 +213,23 @@ namespace Trees.Services
             score += Math.Abs(g.Temperature - p.Temperature);
             score += Math.Abs(g.Water - p.Water);
             planting.Score = PlantingValue - score;
+        }
+
+        /// <summary>
+        /// Sets the CurrentPlayerPotentialScore attribute on a grove to show 
+        /// the score of the current player's top card if planted in that grove 
+        /// </summary>
+        /// <param name="grove"></param>
+        /// <param name="player">presumably the current player</param>
+        void SetCurrentPlayerPotentialScores(Table table) 
+        {
+            Player currentPlayer = table.GetCurrentPlayer();
+            foreach (Grove grove in table.Groves) 
+            {
+                Planting temp = new Planting(currentPlayer, currentPlayer.Hand[0]);
+                ScorePlanting(grove, temp);
+                grove.CurrentPlayerPotentialScore = temp.Score;
+            }
         }
 
         /// <summary>

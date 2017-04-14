@@ -10,7 +10,7 @@
         <div class="col-md-4">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    @grove.Land.Name [@grove.Plantings.Count of @grove.Land.Spaces]
+                    @grove.Land.Name
                     @if (grove.Plantings.Count < grove.Land.Spaces)
                     {
                     <span style="float:right;">
@@ -19,7 +19,15 @@
                     }
                 </div>
                 <div class="panel-body">
-                    @Html.Partial("Habitat", grove.Land.Habitat)
+                    <div class="row">
+                        <div class="col-md-4">
+                            @Html.Partial("Habitat", grove.Land.Habitat)
+                        </div>
+                        <div class="col-md-8">
+                            Plantings: @grove.Plantings.Count of @grove.Land.Spaces<br/>
+                            Top Card Score: @grove.CurrentPlayerPotentialScore
+                        </div>
+                    </div>
                     @if (grove.Plantings.Count > 0) 
                     {
                         <p><center><strong>Plantings</strong></center></p>
