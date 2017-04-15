@@ -28,35 +28,29 @@ namespace Trees.Services
         public Guid NewGame(List<Player> players)
         {
             // initialize decks
-            List<Land> lands = new List<Land>(_gameData.Lands);
-            lands.Shuffle();
-            List<Tree> trees = new List<Tree>(_gameData.Trees);
-            trees.Shuffle();
-            List<Event> events = new List<Event>(_gameData.Events);
-            events.Shuffle();
+            Deck<Land> lands = _gameData.Lands;
+            Deck<Tree> trees = _gameData.Trees;
+            Deck<Event> events = _gameData.Events;
             Guid guid = Guid.NewGuid();
 
             // setup table
             Table table = new Table(guid, lands, trees, events, players);
             for (var i=0; i<StarterGroveCount; i++) {
-                Grove grove = new Grove(table.LandDeck.Pop());
+                Grove grove = new Grove(table.LandDeck.Draw());
                 table.Groves.Add(grove);
             }
 
             // deal hands
             foreach (Player player in players) 
             {
-                for (var i=0; i<TreeHandCount; i++) 
-                {
-                    player.Hand.Add(table.TreeDeck.Pop());
-                }
+                player.Hand = new Hand(table.TreeDeck);
             }
 
             // setup first turn
             table.CurrentPlayer = 0;
             UpdateReplacementStatuses(table);
             SetCurrentPlayerPotentialScores(table);
-            table.CurrentEvent = table.EventDeck.Pop();
+            table.CurrentEvent = table.EventDeck.Draw();
             LogEventDraw(table.TurnLog, table.GetCurrentPlayer().Name, table.CurrentEvent.Name);
 
             _tables.Add(guid, table);
@@ -90,12 +84,12 @@ namespace Trees.Services
         public void PlantTree(Table table, Grove grove)
         {
             var player = table.GetCurrentPlayer();
-            var tree = player.Hand[0];
+            var tree = player.Hand.Peek();
             // confirm an open space
             if (grove.Land.Spaces > grove.Plantings.Count) {
                 // plant the tree
+                tree = player.Hand.Draw();
                 Planting planting = new Planting(player, tree);
-                player.Hand.RemoveAt(0);
                 player.Plantings.Add(planting);
                 grove.Plantings.Add(planting);
                 // update table
@@ -114,17 +108,9 @@ namespace Trees.Services
             table.CurrentPlayer++;
             if (table.CurrentPlayer == table.Players.Count) table.CurrentPlayer = 0;
             // dispose of current event card
-            table.PastEvents.Push(table.CurrentEvent);
-            // reshuffle events if needed
-            if (table.EventDeck.Count == 0) 
-            {
-                var events = new List<Event>(table.PastEvents.ToArray());
-                events.Shuffle();
-                table.EventDeck = new Stack<Event>(events);
-                table.PastEvents.Clear();
-            } 
+            table.EventDeck.Return(table.CurrentEvent);
             // take the next event card
-            table.CurrentEvent = table.EventDeck.Pop();
+            table.CurrentEvent = table.EventDeck.Draw();
             // clear the turn log
             table.GameLog.AddRange(table.TurnLog);
             table.TurnLog.Clear();
@@ -134,7 +120,7 @@ namespace Trees.Services
 
         /// <summary>
         /// Replaces another player's planting with the current player's top tree card. 
-        /// Moves the replaced tree to the Dead Trees stack and updates the replaced 
+        /// Moves the replaced tree to the discard pile stack and updates the replaced 
         /// tree's player's score.
         /// </summary>
         /// <param name="table">Current game table</param>
@@ -143,29 +129,48 @@ namespace Trees.Services
         public void ReplaceTree(Table table, Grove targetGrove, Planting targetPlanting)
         {
             Player currentPlayer = table.GetCurrentPlayer();
-            Tree testTree = currentPlayer.Hand[0];
+            Tree testTree = currentPlayer.Hand.Peek();
             Planting replacementPlanting = new Planting(currentPlayer, testTree);
             // find and replace the planting in the grove
             for (int i = 0; i < targetGrove.Plantings.Count; i++) 
             {
                 if (targetGrove.Plantings[i] == targetPlanting)
                 {
+                    //TODO: Throw exception if this never happens
                     targetGrove.Plantings[i] = replacementPlanting;
                     break;
                 }
             }
             // update current player
-            currentPlayer.Hand.RemoveAt(0);
+            currentPlayer.Hand.Draw();
             currentPlayer.Plantings.Add(replacementPlanting);
             // remove replaced planting
             targetPlanting.Player.Plantings.Remove(targetPlanting);
-            table.DeadTrees.Push(targetPlanting.Tree);
+            table.TreeDeck.Return(targetPlanting.Tree);
             // update scores
             ScorePlanting(targetGrove, replacementPlanting);
             ScorePlayer(targetPlanting.Player);
             ScorePlayer(currentPlayer);
             SetCurrentPlayerPotentialScores(table);
             UpdateReplacementStatuses(table);
+        }
+
+        /// <summary>
+        /// Removes a planted tree, usually due to event enforcement.
+        /// Moves the tree to the discard pile and updates the replaced 
+        /// tree's player's score.
+        /// </summary>
+        /// <param name="table">Current game table</param>
+        /// <param name="targetGrove">Grove containing planting being replaced</param>
+        /// <param name="targetPlanting">Planting being replaced</param>
+        public void RemoveTree(Table table, Grove targetGrove, Planting targetPlanting)
+        {
+            // remove planting
+            targetGrove.Plantings.Remove(targetPlanting);
+            targetPlanting.Player.Plantings.Remove(targetPlanting);
+            table.TreeDeck.Return(targetPlanting.Tree);
+            // update scores
+            ScorePlayer(targetPlanting.Player);
         }
 
         // PROTECTED METHODS
@@ -226,7 +231,7 @@ namespace Trees.Services
             Player currentPlayer = table.GetCurrentPlayer();
             foreach (Grove grove in table.Groves) 
             {
-                Planting temp = new Planting(currentPlayer, currentPlayer.Hand[0]);
+                Planting temp = new Planting(currentPlayer, currentPlayer.Hand.Peek());
                 ScorePlanting(grove, temp);
                 grove.CurrentPlayerPotentialScore = temp.Score;
             }

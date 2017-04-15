@@ -1,29 +1,16 @@
 @using System.Collections.Generic;
 @using Trees.Models;
+@using Trees.Models.Stateful;
+
 @{
-    @model Stack<Land>
+    @model Deck<Land>
 }
         <div class="col-md-4">
             <div class="panel panel-default">
                  <div class="panel-heading">Land Deck</div>
                  <div class="panel-body">
-                     <table class="table">
-                         <thead>
-                             <tr>
-                                 <th>Name / Spaces</th>
-                                 <th>Habitat</th>
-                             </tr>
-                         </thead>
-                         <tbody>
-                             @foreach (Land land in Model) 
-                             {
-                             <tr>
-                                 <td>@land.Name <br/>Spaces: @land.Spaces</td>
-                                 <td>@Html.Partial("Habitat", @land.Habitat)</td>
-                             </tr>
-                             }
-                         </tbody>
-                     </table>
+                     Cards in Deck: @Model.DeckCount<br/>
+                     Cards in Discard: @Model.DiscardCount
                  </div>
             </div>
         </div>

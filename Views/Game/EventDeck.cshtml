@@ -1,29 +1,16 @@
 @using System.Collections.Generic;
 @using Trees.Models;
+@using Trees.Models.Stateful;
+
 @{
-    @model Stack<Event>
+    @model Deck<Event>
 }
         <div class="col-md-4">
             <div class="panel panel-default">
                  <div class="panel-heading">Event Deck</div>
                  <div class="panel-body">
-                     <table class="table">
-                         <thead>
-                             <tr>
-                                 <th>Name</th>
-                                 <th>Description</th>
-                             </tr>
-                         </thead>
-                         <tbody>
-                             @foreach (Event ev in Model) 
-                             {
-                             <tr>
-                                 <td>@ev.Name</td>
-                                 <td><small>@ev.Description</small></td>
-                             </tr>
-                             }
-                         </tbody>
-                     </table>
+                     Cards in Deck: @Model.DeckCount<br/>
+                     Cards in Discard: @Model.DiscardCount
                  </div>
             </div>
         </div>

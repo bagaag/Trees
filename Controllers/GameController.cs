@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Trees.Services;
-using Trees.Models;
 using Trees.Models.Stateful;
 using System.Collections.Generic;
 using System;
@@ -58,7 +57,6 @@ namespace Trees.Controllers
 
         public IActionResult PlantTree()
         {
-            int playerIx;
             int groveIx;
             string sguid;
             if (Int32.TryParse(HttpContext.Request.Query["grove_ix"], out groveIx))
@@ -91,6 +89,29 @@ namespace Trees.Controllers
                         Grove grove = table.Groves[groveIx];
                         Planting planting = grove.Plantings[plantingIx];
                         _game.ReplaceTree(table, grove, planting);                            
+                    }
+                }
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult RemoveTree()
+        {
+            int groveIx;
+            int plantingIx;
+            string sguid;
+            if (Int32.TryParse(HttpContext.Request.Query["grove_ix"], out groveIx))
+            {
+                if (Int32.TryParse(HttpContext.Request.Query["planting_ix"], out plantingIx))
+                {
+                sguid = HttpContext.Session.GetString(SessionKeyTable);
+                    if (sguid != null) 
+                    {
+                        Table table = _game.GetTable(new Guid(sguid));
+                        Grove grove = table.Groves[groveIx];
+                        Planting planting = grove.Plantings[plantingIx];
+                        _game.RemoveTree(table, grove, planting);                            
                     }
                 }
             }

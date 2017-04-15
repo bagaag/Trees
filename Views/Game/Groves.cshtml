@@ -24,8 +24,8 @@
                             @Html.Partial("Habitat", grove.Land.Habitat)
                         </div>
                         <div class="col-md-8">
-                            Plantings: @grove.Plantings.Count of @grove.Land.Spaces<br/>
-                            Top Card Score: @grove.CurrentPlayerPotentialScore
+                            Top Card Score: @grove.CurrentPlayerPotentialScore<br/>
+                            Plantings: @grove.Plantings.Count of @grove.Land.Spaces
                         </div>
                     </div>
                     @if (grove.Plantings.Count > 0) 
@@ -44,7 +44,7 @@
                                             {
                                                 <a href="@Url.Action("ReplaceTree","Game")?grove_ix=@g&planting_ix=@p">R</a>
                                             }
-                                            <a href="#">X</a>
+                                            <a href="@Url.Action("RemoveTree","Game")?grove_ix=@g&planting_ix=@p">X</a>
                                         </span>
                                         @planting.Tree.Name
                                     </div>

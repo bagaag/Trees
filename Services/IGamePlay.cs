@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Trees.Models;
 using Trees.Models.Stateful;
 
 namespace Trees.Services
@@ -17,6 +16,7 @@ namespace Trees.Services
 
         void ReplaceTree(Table table, Grove targetGrove, Planting targetPlanting);
 
+        void RemoveTree(Table table, Grove targetGrove, Planting targetPlanting);
         void CompleteTurn(Table table);
     }
 }

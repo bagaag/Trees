@@ -9,7 +9,7 @@ namespace Trees.Models.Stateful
             Name = name;
         }
         public string Name { get; set; }
-        public List<Tree> Hand { get; set; }  = new List<Tree>();
+        public Hand Hand { get; set; }
         public List<Planting> Plantings { get; set; } = new List<Planting>();
         public int Score { get; set; } = 0;
     }

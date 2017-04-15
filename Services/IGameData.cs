@@ -1,14 +1,14 @@
-using System.Collections.Generic;
 using Trees.Models;
+using Trees.Models.Stateful;
 
 namespace Trees.Services
 {
     public interface IGameData
     {
-        List<Tree> Trees { get; }
+        Deck<Tree> Trees { get; }
 
-        List<Event> Events { get; }
+        Deck<Event> Events { get; }
 
-        List<Land> Lands { get; }
+        Deck<Land> Lands { get; }
     }
 }

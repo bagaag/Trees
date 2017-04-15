@@ -1,4 +1,4 @@
 TODO:
-- Replenish empty hand
 - Add land when <3 available
-- Event enforcement
+- Event enforcement (mark target tree, change Complete Turn to Impose Event)
+- Planting enforcement (only allow one planting per turn unless event allows otherwise)

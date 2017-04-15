@@ -27,7 +27,7 @@
                     <tbody>
                         @if (player.Hand.Count > 0) {
                             int t = 0;
-                            Tree tree = player.Hand[t];
+                            Tree tree = player.Hand.Peek();
                             <tr>
                                 <td>
                                     @tree.Name 
