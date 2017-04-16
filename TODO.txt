@@ -1,4 +1,8 @@
 TODO:
-- Add land when <3 available
-- Event enforcement (mark target tree, change Complete Turn to Impose Event)
+- Timestamp plantings for event enforcement
+- Event logic interface
+- Event classes
+- Event enforcement UX (mark target tree, change Complete Turn to Impose Event, allow +1 plantings)
 - Planting enforcement (only allow one planting per turn unless event allows otherwise)
+- End game when all lands are full and current player cannot replace a tree
+- Implement two-player mode

@@ -99,6 +99,13 @@ namespace Trees.Services
                 UpdateReplacementStatuses(table);
                 // record the turn event
                 table.TurnLog.Add($"{player.Name} planted a {tree.Name} in the {grove.Land.Name}");
+                // add land if needed
+                if (table.Groves.Find(g => g.HasSpace) == null) 
+                {
+                    Land land = table.LandDeck.Draw();
+                    table.Groves.Add(new Grove(land));
+                    table.TurnLog.Add($"A new {land.Name} grove is now available.");
+                }
             }
         }
 
