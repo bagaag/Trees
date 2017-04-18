@@ -1,5 +1,4 @@
 TODO:
-- Extra Planting Event
-- Update initial events to use enforcement classes
+- Scenario tester
 - End game when all lands are full and current player cannot replace a tree
 - Implement two-player mode

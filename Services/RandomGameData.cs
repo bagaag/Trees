@@ -41,17 +41,14 @@ namespace Trees.Services
             _events.Add(new EmptyEvent("Empty", "Empty"));
             _events.Add(new EmptyEvent("Empty", "Empty"));
             _events.Add(new EmptyEvent("Empty", "Empty"));
-            _events.Add(new EmptyEvent("Empty", "Empty"));
-            _events.Add(new EmptyEvent("Empty", "Empty"));
-            _events.Add(new EmptyEvent("Empty", "Empty"));
-            _events.Add(new EmptyEvent("Empty", "Empty"));
-            _events.Add((new KillEvent("Lowest 1 Water", "Lowest 1 Water")).WhereHabitat(HabitatField.Water, -1));
-            _events.Add((new KillEvent("Highest 1 Water", "Highest 1 Water")).WhereHabitat(HabitatField.Water, 1));
-            _events.Add((new KillEvent("Highest 2 Wind", "Highest 2 Wind")).WhereDamage(DamageField.Wind, 2));
-            _events.Add((new KillEvent("Lowest 2 Score", "Lowest 2 Score")).WhereHabitatScore(-2));
-            _events.Add((new KillEvent("Highest 1 Score", "Highest 1 Score")).WhereHabitatScore(1));
-            _events.Add((new KillEvent("Current Player", "Current Player")).WherePlayer(true));
-            _events.Add((new KillEvent("Other Players", "Other Players")).WherePlayer(false));
+            _events.Add(new ExtraPlantingEvent("Extra Planting", "Extra Planting"));
+            // _events.Add((new KillEvent("Lowest 1 Water", "Lowest 1 Water")).WhereHabitat(HabitatField.Water, -1));
+            // _events.Add((new KillEvent("Highest 1 Water", "Highest 1 Water")).WhereHabitat(HabitatField.Water, 1));
+            // _events.Add((new KillEvent("Highest 2 Wind", "Highest 2 Wind")).WhereDamage(DamageField.Wind, 2));
+            // _events.Add((new KillEvent("Lowest 2 Score", "Lowest 2 Score")).WhereHabitatScore(-2));
+            // _events.Add((new KillEvent("Highest 1 Score", "Highest 1 Score")).WhereHabitatScore(1));
+            // _events.Add((new KillEvent("Current Player", "Current Player")).WherePlayer(true));
+            // _events.Add((new KillEvent("Other Players", "Other Players")).WherePlayer(false));
             
 /*
             _events.Add(new Event("Flood", "Any tree with water below 3 perishes in the flood. Mountain habitats are spared."));

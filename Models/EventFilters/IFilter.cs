@@ -6,7 +6,7 @@ namespace Trees.Models.EventFilters
     /// <summary>
     /// /// Interface for all filter types
     /// </summary>
-    interface IFilter
+    public interface IFilter
     {
         void Filter(Player currentPlayer, List<Planting> plantings);
     }

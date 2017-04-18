@@ -8,7 +8,7 @@ namespace Trees.Models.Events
     /// <summary>
     /// Supports an event killing plantings on the table via several possible filter combinations
     /// </summary>
-    public class KillEvent : BaseEvent
+    public class KillEvent : PlantingFilterBaseEvent
     {
         /// <summary>
         /// List of filters that specify what plantings should be killed

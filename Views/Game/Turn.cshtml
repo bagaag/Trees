@@ -27,11 +27,16 @@
             <hr/>
             @if (Model.GameState == GameState.EventProcessing)
             {
-                <p><a class="btn btn-default" href="@Url.Action("ProcessEvent","Game")">Process Event</a></p>
+                <p><a class="btn btn-primary" href="@Url.Action("ProcessEvent","Game")">Process Event</a></p>
             }
-            else 
+            else if (Model.PlantingsRemaining > 0)
             {
-                <p><a class="btn btn-default" href="@Url.Action("CompleteTurn","Game")">Complete Turn</a></p>
+                var trees = Model.PlantingsRemaining==1 ? "Tree" : "Trees";
+                <p><a class="btn btn-primary disabled" href="#")">Plant @Model.PlantingsRemaining @trees</a></p>
+            }
+            else
+            {
+                <p><a class="btn btn-primary" href="@Url.Action("CompleteTurn","Game")">Complete Turn</a></p>
             }
         </div>
     </div>

@@ -51,6 +51,7 @@ namespace Trees.Services
             // setup first turn
             UpdateReplacementStatuses(table);
             SetCurrentPlayerPotentialScores(table);
+            table.PlantingsRemaining = Table.PlantingsPerTurn;
             EventDraw(table); // sets game state to EventProcessing
 
             _tables.Add(guid, table);
@@ -125,6 +126,7 @@ namespace Trees.Services
             table.GameLog.AddRange(table.TurnLog);
             table.TurnLog.Clear();
             // recycle current event + update game state
+            table.PlantingsRemaining = Table.PlantingsPerTurn;
             EventDraw(table);
         }
 
@@ -201,9 +203,8 @@ namespace Trees.Services
         {
             table.CurrentEvent.Execute(this, table);
             table.GameState = GameState.Planting;
-            table.PlantingsRemaining = Table.PlantingsPerTurn;
         }
-        
+
         #region Protected
 
         /// <summary>
@@ -287,9 +288,9 @@ namespace Trees.Services
         {
             if (table.CurrentEvent!=null) table.EventDeck.Return(table.CurrentEvent);
             table.CurrentEvent = table.EventDeck.Draw();
+            table.TurnLog.Add($"{table.GetCurrentPlayer().Name} drew the \"{table.CurrentEvent.Name}\" event");
             table.CurrentEvent.Stage(this, table);
             table.GameState = GameState.EventProcessing;
-            table.TurnLog.Add($"{table.GetCurrentPlayer().Name} drew the \"{table.CurrentEvent.Name}\" event");
         }
         #endregion
     }
