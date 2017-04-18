@@ -1,4 +1,5 @@
 using Trees.Models;
+using Trees.Models.Events;
 using Trees.Models.Stateful;
 
 namespace Trees.Services
@@ -7,7 +8,7 @@ namespace Trees.Services
     {
         Deck<Tree> Trees { get; }
 
-        Deck<Event> Events { get; }
+        Deck<BaseEvent> Events { get; }
 
         Deck<Land> Lands { get; }
     }

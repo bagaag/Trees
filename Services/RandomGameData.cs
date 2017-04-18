@@ -12,7 +12,7 @@ namespace Trees.Services
 
         public RandomGameData()
         {
-            List<Event> _events = new List<Event>();
+            List<BaseEvent> _events = new List<BaseEvent>();
             List<Tree> _trees = new List<Tree>();
             List<Land> _lands = new List<Land>();
 
@@ -38,13 +38,13 @@ namespace Trees.Services
             // _events.Add((new KillEvent("Field Death", "Everything in the Field Dies.")).WhereLand("Field"));
             // _events.Add((new KillEvent("City Death", "Everything in the City Dies.")).WhereLand("City"));
             //_events.Add((new KillEvent("Water < 3", "Water < 3")).WhereHabitat(HabitatField.Water, Conditions.Operators.LT, 3));
-            _events.Add(new Event("Empty", "Empty"));
-            _events.Add(new Event("Empty", "Empty"));
-            _events.Add(new Event("Empty", "Empty"));
-            _events.Add(new Event("Empty", "Empty"));
-            _events.Add(new Event("Empty", "Empty"));
-            _events.Add(new Event("Empty", "Empty"));
-            _events.Add(new Event("Empty", "Empty"));
+            _events.Add(new EmptyEvent("Empty", "Empty"));
+            _events.Add(new EmptyEvent("Empty", "Empty"));
+            _events.Add(new EmptyEvent("Empty", "Empty"));
+            _events.Add(new EmptyEvent("Empty", "Empty"));
+            _events.Add(new EmptyEvent("Empty", "Empty"));
+            _events.Add(new EmptyEvent("Empty", "Empty"));
+            _events.Add(new EmptyEvent("Empty", "Empty"));
             _events.Add((new KillEvent("Lowest 1 Water", "Lowest 1 Water")).WhereHabitat(HabitatField.Water, -1));
             _events.Add((new KillEvent("Highest 1 Water", "Highest 1 Water")).WhereHabitat(HabitatField.Water, 1));
             _events.Add((new KillEvent("Highest 2 Wind", "Highest 2 Wind")).WhereDamage(DamageField.Wind, 2));
@@ -72,7 +72,7 @@ namespace Trees.Services
             _events.Add(new Event("Rain", "A much needed rain falls. Plant an extra tree if your top card has a water habitat of 3 or more."));
 */
             Trees = new Deck<Tree>(_trees);
-            Events = new Deck<Event>(_events);
+            Events = new Deck<BaseEvent>(_events);
             Lands = new Deck<Land>(_lands);
             
         }
@@ -82,7 +82,7 @@ namespace Trees.Services
             return random.Next(1, 4);
         }
         public Deck<Tree> Trees { get; private set; } 
-        public Deck<Event> Events { get; private set; }
+        public Deck<BaseEvent> Events { get; private set; }
         public Deck<Land> Lands { get; private set; }
     }
 }

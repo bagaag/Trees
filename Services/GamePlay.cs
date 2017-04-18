@@ -32,7 +32,7 @@ namespace Trees.Services
             // initialize decks
             Deck<Land> lands = _gameData.Lands.Copy();
             Deck<Tree> trees = _gameData.Trees.Copy();
-            Deck<Event> events = _gameData.Events.Copy();
+            Deck<BaseEvent> events = _gameData.Events.Copy();
             Guid guid = Guid.NewGuid();
 
             // setup table
@@ -182,15 +182,7 @@ namespace Trees.Services
         /// <param name="table"></param>
         public void ProcessEvent(Table table)
         {
-            if (table.CurrentEvent is KillEvent)
-            {
-                KillEvent ke = (KillEvent) table.CurrentEvent;
-                List<Planting> remove = ke.Execute(table);
-                foreach (Planting planting in remove) 
-                {
-                    RemoveTree(table, planting);
-                }
-            }
+            table.CurrentEvent.Execute(this, table);
             table.GameState = GameState.Planting;
         }
         
@@ -277,17 +269,8 @@ namespace Trees.Services
         {
             if (table.CurrentEvent!=null) table.EventDeck.Return(table.CurrentEvent);
             table.CurrentEvent = table.EventDeck.Draw();
-            if (table.CurrentEvent is KillEvent)
-            {
-                KillEvent ke = (KillEvent) table.CurrentEvent;
-                List<Planting> plantings = ke.Execute(table);
-                foreach (Planting planting in plantings)
-                {
-                    planting.Flag = PlantingFlag.Kill;
-                }
-            }
+            table.CurrentEvent.Stage(this, table);
             table.GameState = GameState.EventProcessing;
-            if (table.CurrentEvent.Name==null) throw new Exception("Event name null: " + table.CurrentEvent.ToString());
             table.TurnLog.Add($"{table.GetCurrentPlayer().Name} drew the \"{table.CurrentEvent.Name}\" event");
         }
         #endregion

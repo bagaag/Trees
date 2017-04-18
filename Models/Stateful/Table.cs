@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
 using Trees.Services;
+using Trees.Models.Events;
 
 namespace Trees.Models.Stateful
 {
     public class Table
     {
-        public Table(Guid guid, Deck<Land> lands, Deck<Tree> trees, Deck<Event> events, List<Player> players) 
+        public Table(Guid guid, Deck<Land> lands, Deck<Tree> trees, Deck<BaseEvent> events, List<Player> players) 
         {            
             LandDeck = lands;
             TreeDeck = trees;
@@ -17,7 +18,7 @@ namespace Trees.Models.Stateful
         public Guid Id { get; set; }
         public Deck<Land> LandDeck { get; private set; } 
         public Deck<Tree> TreeDeck { get; set; } 
-        public Deck<Event> EventDeck { get; set; }
+        public Deck<BaseEvent> EventDeck { get; set; }
         public List<Player> Players { get; set; } 
         public int CurrentPlayer { get; private set; } = 0;
         public int NextPlayer()
@@ -30,7 +31,7 @@ namespace Trees.Models.Stateful
         {
             return this.Players[this.CurrentPlayer];
         }
-        public Event CurrentEvent { get; set; }
+        public BaseEvent CurrentEvent { get; set; }
         public List<Grove> Groves { get; set; } = new List<Grove>();
         public List<string> TurnLog { get; set; } = new List<string>();
         public List<string> GameLog { get; set; } = new List<string>();
