@@ -12,7 +12,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     @grove.Land.Name
-                    @if (grove.Plantings.Count < grove.Land.Spaces && Model.GameState == GameState.Planting)
+                    @if (grove.Plantings.Count < grove.Land.Spaces && Model.GameState == GameState.Planting && Model.PlantingsRemaining > 0)
                     {
                     <span style="float:right;">
                         <a href="@Url.Action("PlantTree","Game")?grove_ix=@g">Plant</a>
@@ -44,7 +44,7 @@
                                 <div class="panel panel-default">
                                     <div class="panel-heading @headingClass">
                                         <span style="float:right;">
-                                            @if (planting.CanBeReplaced && Model.GameState == GameState.Planting)
+                                            @if (planting.CanBeReplaced && Model.GameState == GameState.Planting && Model.PlantingsRemaining > 0)
                                             {
                                                 <a href="@Url.Action("ReplaceTree","Game")?grove_ix=@g&planting_ix=@p">R</a>
                                             }

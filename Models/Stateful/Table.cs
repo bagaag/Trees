@@ -7,8 +7,9 @@ namespace Trees.Models.Stateful
 {
     public class Table
     {
+        public const int PlantingsPerTurn = 1;
         public Table(Guid guid, Deck<Land> lands, Deck<Tree> trees, Deck<BaseEvent> events, List<Player> players) 
-        {            
+        {
             LandDeck = lands;
             TreeDeck = trees;
             EventDeck = events;
@@ -16,6 +17,7 @@ namespace Trees.Models.Stateful
             Id = guid;
         }
         public Guid Id { get; set; }
+        public int PlantingsRemaining { get; set; } = 0;
         public Deck<Land> LandDeck { get; private set; } 
         public Deck<Tree> TreeDeck { get; set; } 
         public Deck<BaseEvent> EventDeck { get; set; }

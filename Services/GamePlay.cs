@@ -83,6 +83,10 @@ namespace Trees.Services
         /// <param name="tree">tree to plant</param>
         public void PlantTree(Table table, Grove grove)
         {
+            if (table.PlantingsRemaining == 0)
+            {
+                throw new Exception("No plantings remaining in turn");
+            }
             var player = table.GetCurrentPlayer();
             var tree = player.Hand.Peek();
             // confirm an open space
@@ -97,6 +101,7 @@ namespace Trees.Services
                 ScorePlayer(player);
                 SetCurrentPlayerPotentialScores(table);            
                 UpdateReplacementStatuses(table);
+                table.PlantingsRemaining--;
                 // record the turn event
                 table.TurnLog.Add($"{player.Name} planted a {tree.Name} in the {grove.Land.Name}");
                 // add land if needed
@@ -106,6 +111,9 @@ namespace Trees.Services
                     table.Groves.Add(new Grove(land));
                     table.TurnLog.Add($"A new {land.Name} grove is now available.");
                 }
+            }
+            else {
+                throw new Exception("No spaces available");
             }
         }
 
@@ -130,6 +138,10 @@ namespace Trees.Services
         /// <param name="targetPlanting">Planting being replaced</param>
         public void ReplaceTree(Table table, Planting targetPlanting)
         {
+            int remaining = table.PlantingsRemaining;
+            if (remaining <= 0) {
+                throw new Exception("No plantings remaining in turn");
+            }
             Player currentPlayer = table.GetCurrentPlayer();
             Tree testTree = currentPlayer.Hand.Peek();
             Grove targetGrove = targetPlanting.Grove;
@@ -139,10 +151,15 @@ namespace Trees.Services
             {
                 if (targetGrove.Plantings[i] == targetPlanting)
                 {
-                    //TODO: Throw exception if this never happens
                     targetGrove.Plantings[i] = replacementPlanting;
+                    table.PlantingsRemaining--;
                     break;
                 }
+            }
+            // throw exception if replacement wasn't found
+            if (remaining == table.PlantingsRemaining) 
+            {
+                throw new Exception("Replacement was not found");
             }
             // update current player
             currentPlayer.Hand.Draw();
@@ -184,6 +201,7 @@ namespace Trees.Services
         {
             table.CurrentEvent.Execute(this, table);
             table.GameState = GameState.Planting;
+            table.PlantingsRemaining = Table.PlantingsPerTurn;
         }
         
         #region Protected
