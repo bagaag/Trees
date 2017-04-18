@@ -1,8 +1,5 @@
 TODO:
-- Timestamp plantings for event enforcement
-- Event logic interface
-- Event classes
-- Event enforcement UX (mark target tree, change Complete Turn to Impose Event, allow +1 plantings)
+- Extra Planting Event
 - Planting enforcement (only allow one planting per turn unless event allows otherwise)
 - End game when all lands are full and current player cannot replace a tree
 - Implement two-player mode

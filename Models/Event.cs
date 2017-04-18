@@ -1,6 +1,6 @@
 namespace Trees.Models 
 {
-    public class Event
+     public class Event
     {
         public Event(string name, string description) 
         {

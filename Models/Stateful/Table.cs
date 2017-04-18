@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Trees.Services;
 
 namespace Trees.Models.Stateful
 {
@@ -18,7 +19,13 @@ namespace Trees.Models.Stateful
         public Deck<Tree> TreeDeck { get; set; } 
         public Deck<Event> EventDeck { get; set; }
         public List<Player> Players { get; set; } 
-        public int CurrentPlayer { get; set; }
+        public int CurrentPlayer { get; private set; } = 0;
+        public int NextPlayer()
+        {
+            CurrentPlayer++;
+            if (CurrentPlayer == Players.Count) CurrentPlayer = 0;
+            return CurrentPlayer;
+        }
         public Player GetCurrentPlayer()
         {
             return this.Players[this.CurrentPlayer];
@@ -27,6 +34,6 @@ namespace Trees.Models.Stateful
         public List<Grove> Groves { get; set; } = new List<Grove>();
         public List<string> TurnLog { get; set; } = new List<string>();
         public List<string> GameLog { get; set; } = new List<string>();
-
+        public GameState GameState { get; set; } = GameState.EventProcessing;
     }
 }

@@ -39,3 +39,11 @@ textarea {
 .current-player {
     background-color: #69ef5d !important;
 }
+
+.planting-flag-kill {
+    background-color: red !important;
+    color: white !important;
+}
+.planting-flag-kill a {
+    color: yellow !important;
+}

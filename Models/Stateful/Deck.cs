@@ -13,30 +13,38 @@ namespace Trees.Models.Stateful
         private List<T> _deck;
         private List<T> _discard;
 
-        public Deck(List<T> list) 
+        public Deck(List<T> list)
         {
             _deck = list;
             _discard = new List<T>();
             Shuffle();
         }
 
-        public int DeckCount { get {
-            return _deck.Count;
-        }}
-        public int DiscardCount { get {
-            return _discard.Count;
-        }}
+        public int DeckCount
+        {
+            get
+            {
+                return _deck.Count;
+            }
+        }
+        public int DiscardCount
+        {
+            get
+            {
+                return _discard.Count;
+            }
+        }
 
         public T Draw()
         {
-            if (_deck.Count==0) throw new Exception("The deck is empty!");
-
-            T card = _deck[0];
-            _deck.RemoveAt(0);
-            if (_deck.Count==0) 
+            if (_deck.Count == 0)
             {
                 Shuffle();
             }
+            if (_deck.Count == 0) throw new Exception("The deck is empty!");
+
+            T card = _deck[0];
+            _deck.RemoveAt(0);
             return card;
         }
 
@@ -49,7 +57,7 @@ namespace Trees.Models.Stateful
             _discard = new List<T>();
 
             int i, n, k;
-            for (i=0; i<3; i++) 
+            for (i = 0; i < 3; i++)
             {
                 n = _deck.Count;
                 while (n > 1)
@@ -63,24 +71,32 @@ namespace Trees.Models.Stateful
             }
         }
 
-        public List<T> Hand(int count) 
+        public List<T> Hand(int count)
         {
             List<T> hand = new List<T>(count);
-            for (int i=0; i<count; i++)
+            for (int i = 0; i < count; i++)
             {
                 hand.Add(Draw());
             }
             return hand;
         }
 
-        public void Return(T card) 
+        public void Return(T card)
         {
+            if (card == null) throw new Exception("Tried to return null card");
             _discard.Add(card);
         }
 
-        public void Return(List<T> cards) 
+        public void Return(List<T> cards)
         {
-            _discard.AddRange(cards);
+            cards.ForEach(card => Return(card));
+        }
+
+        public Deck<T> Copy()
+        {
+            List<T> copy = new List<T>(_deck.Count);
+            copy.AddRange(_deck);
+            return new Deck<T>(copy);
         }
     }
 }

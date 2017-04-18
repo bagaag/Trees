@@ -40,7 +40,7 @@ namespace Trees
 
             // Trees services
             services.AddSingleton<IGameData, RandomGameData>();
-            services.AddSingleton<IGamePlay, GamePlay>();
+            services.AddSingleton<GamePlay, GamePlay>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

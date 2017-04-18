@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using Trees.Models;
+using Trees.Models.Events;
 using Trees.Models.Stateful;
 
 namespace Trees.Services
 {
-    public class GamePlay : IGamePlay
+    public enum GameState { EventProcessing, Planting, TurnOver }
+    public class GamePlay
     {
         private const int StarterGroveCount = 3;
         private const int TreeHandCount = 5;
@@ -28,9 +30,9 @@ namespace Trees.Services
         public Guid NewGame(List<Player> players)
         {
             // initialize decks
-            Deck<Land> lands = _gameData.Lands;
-            Deck<Tree> trees = _gameData.Trees;
-            Deck<Event> events = _gameData.Events;
+            Deck<Land> lands = _gameData.Lands.Copy();
+            Deck<Tree> trees = _gameData.Trees.Copy();
+            Deck<Event> events = _gameData.Events.Copy();
             Guid guid = Guid.NewGuid();
 
             // setup table
@@ -47,11 +49,9 @@ namespace Trees.Services
             }
 
             // setup first turn
-            table.CurrentPlayer = 0;
             UpdateReplacementStatuses(table);
             SetCurrentPlayerPotentialScores(table);
-            table.CurrentEvent = table.EventDeck.Draw();
-            LogEventDraw(table.TurnLog, table.GetCurrentPlayer().Name, table.CurrentEvent.Name);
+            EventDraw(table); // sets game state to EventProcessing
 
             _tables.Add(guid, table);
             return guid;
@@ -89,7 +89,7 @@ namespace Trees.Services
             if (grove.Land.Spaces > grove.Plantings.Count) {
                 // plant the tree
                 tree = player.Hand.Draw();
-                Planting planting = new Planting(player, tree);
+                Planting planting = new Planting(player, grove, tree);
                 player.Plantings.Add(planting);
                 grove.Plantings.Add(planting);
                 // update table
@@ -112,17 +112,12 @@ namespace Trees.Services
         public void CompleteTurn(Table table)
         {
             // next player
-            table.CurrentPlayer++;
-            if (table.CurrentPlayer == table.Players.Count) table.CurrentPlayer = 0;
-            // dispose of current event card
-            table.EventDeck.Return(table.CurrentEvent);
-            // take the next event card
-            table.CurrentEvent = table.EventDeck.Draw();
+            table.NextPlayer();
             // clear the turn log
             table.GameLog.AddRange(table.TurnLog);
             table.TurnLog.Clear();
-            // record the turn event
-            LogEventDraw(table.TurnLog, table.GetCurrentPlayer().Name, table.CurrentEvent.Name);
+            // recycle current event + update game state
+            EventDraw(table);
         }
 
         /// <summary>
@@ -133,11 +128,12 @@ namespace Trees.Services
         /// <param name="table">Current game table</param>
         /// <param name="targetGrove">Grove containing planting being replaced</param>
         /// <param name="targetPlanting">Planting being replaced</param>
-        public void ReplaceTree(Table table, Grove targetGrove, Planting targetPlanting)
+        public void ReplaceTree(Table table, Planting targetPlanting)
         {
             Player currentPlayer = table.GetCurrentPlayer();
             Tree testTree = currentPlayer.Hand.Peek();
-            Planting replacementPlanting = new Planting(currentPlayer, testTree);
+            Grove targetGrove = targetPlanting.Grove;
+            Planting replacementPlanting = new Planting(currentPlayer, targetGrove, testTree);
             // find and replace the planting in the grove
             for (int i = 0; i < targetGrove.Plantings.Count; i++) 
             {
@@ -170,17 +166,35 @@ namespace Trees.Services
         /// <param name="table">Current game table</param>
         /// <param name="targetGrove">Grove containing planting being replaced</param>
         /// <param name="targetPlanting">Planting being replaced</param>
-        public void RemoveTree(Table table, Grove targetGrove, Planting targetPlanting)
+        public void RemoveTree(Table table, Planting targetPlanting)
         {
             // remove planting
-            targetGrove.Plantings.Remove(targetPlanting);
+            targetPlanting.Grove.Plantings.Remove(targetPlanting);
             targetPlanting.Player.Plantings.Remove(targetPlanting);
             table.TreeDeck.Return(targetPlanting.Tree);
             // update scores
             ScorePlayer(targetPlanting.Player);
         }
 
-        // PROTECTED METHODS
+        /// <summary>
+        /// Takes action on the current event depending on its type
+        /// </summary>
+        /// <param name="table"></param>
+        public void ProcessEvent(Table table)
+        {
+            if (table.CurrentEvent is KillEvent)
+            {
+                KillEvent ke = (KillEvent) table.CurrentEvent;
+                List<Planting> remove = ke.Execute(table);
+                foreach (Planting planting in remove) 
+                {
+                    RemoveTree(table, planting);
+                }
+            }
+            table.GameState = GameState.Planting;
+        }
+        
+        #region Protected
 
         /// <summary>
         /// Updates existing plantings with status indicating whether each can 
@@ -238,7 +252,7 @@ namespace Trees.Services
             Player currentPlayer = table.GetCurrentPlayer();
             foreach (Grove grove in table.Groves) 
             {
-                Planting temp = new Planting(currentPlayer, currentPlayer.Hand.Peek());
+                Planting temp = new Planting(currentPlayer, grove, currentPlayer.Hand.Peek());
                 ScorePlanting(grove, temp);
                 grove.CurrentPlayerPotentialScore = temp.Score;
             }
@@ -248,15 +262,34 @@ namespace Trees.Services
         /// Sums the scores of each planting and assigns to the player's score. Lower score is better.
         /// </summary>
         /// <param name="player"></param>
+        //TODO: Move this to Player.Score
         void ScorePlayer(Player player) 
         {
             player.Score = 0;
             player.Plantings.ForEach(p => { player.Score += p.Score; });
         }
 
-        void LogEventDraw(List<string> log, string playerName, string eventName) 
+        /// <summary>
+        /// Draws the next event and sets the stage for enforcement
+        /// </summary>
+        /// <param name="table"></param>
+        void EventDraw(Table table) 
         {
-            log.Add($"{playerName} drew the \"{eventName}\" event");
+            if (table.CurrentEvent!=null) table.EventDeck.Return(table.CurrentEvent);
+            table.CurrentEvent = table.EventDeck.Draw();
+            if (table.CurrentEvent is KillEvent)
+            {
+                KillEvent ke = (KillEvent) table.CurrentEvent;
+                List<Planting> plantings = ke.Execute(table);
+                foreach (Planting planting in plantings)
+                {
+                    planting.Flag = PlantingFlag.Kill;
+                }
+            }
+            table.GameState = GameState.EventProcessing;
+            if (table.CurrentEvent.Name==null) throw new Exception("Event name null: " + table.CurrentEvent.ToString());
+            table.TurnLog.Add($"{table.GetCurrentPlayer().Name} drew the \"{table.CurrentEvent.Name}\" event");
         }
+        #endregion
     }
 }

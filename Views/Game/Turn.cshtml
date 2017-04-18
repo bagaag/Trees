@@ -1,6 +1,7 @@
 @using System.Collections.Generic
 @using Trees.Models
 @using Trees.Models.Stateful
+@using Trees.Services
 @{
     @model Table
     var currentEvent = Model.CurrentEvent;
@@ -24,7 +25,14 @@
                 }
             </ul>
             <hr/>
-            <p><a class="btn btn-default" href="@Url.Action("CompleteTurn","Game")">Complete Turn</a></p>
+            @if (Model.GameState == GameState.EventProcessing)
+            {
+                <p><a class="btn btn-default" href="@Url.Action("ProcessEvent","Game")">Process Event</a></p>
+            }
+            else 
+            {
+                <p><a class="btn btn-default" href="@Url.Action("CompleteTurn","Game")">Complete Turn</a></p>
+            }
         </div>
     </div>
 </div>

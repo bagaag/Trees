@@ -9,10 +9,10 @@ namespace Trees.Controllers
 {
     public class GameController : Controller
     {
-        private readonly IGamePlay _game;
+        private readonly GamePlay _game;
         const string SessionKeyTable = "table";
 
-        public GameController(IGamePlay game)
+        public GameController(GamePlay game)
         {
             _game = game;
         }
@@ -88,7 +88,7 @@ namespace Trees.Controllers
                         Table table = _game.GetTable(new Guid(sguid));
                         Grove grove = table.Groves[groveIx];
                         Planting planting = grove.Plantings[plantingIx];
-                        _game.ReplaceTree(table, grove, planting);                            
+                        _game.ReplaceTree(table, planting);                            
                     }
                 }
             }
@@ -96,6 +96,7 @@ namespace Trees.Controllers
             return RedirectToAction("Index");
         }
 
+/* 
         public IActionResult RemoveTree()
         {
             int groveIx;
@@ -111,11 +112,21 @@ namespace Trees.Controllers
                         Table table = _game.GetTable(new Guid(sguid));
                         Grove grove = table.Groves[groveIx];
                         Planting planting = grove.Plantings[plantingIx];
-                        _game.RemoveTree(table, grove, planting);                            
+                        _game.RemoveTree(table, planting);                            
                     }
                 }
             }
 
+            return RedirectToAction("Index");
+        }
+*/
+        public IActionResult ProcessEvent()
+        {
+            Table table = GetTable();
+            if (table != null)
+            {
+                _game.ProcessEvent(table);
+            }
             return RedirectToAction("Index");
         }
 
