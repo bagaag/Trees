@@ -6,9 +6,9 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceRoot}\\Trees.Console\\bin\\Debug\\netcoreapp1.1\\Trees.Console.dll",
+            "program": "${workspaceRoot}\\bin\\Debug\\netcoreapp1.1\\Trees.Console.dll",
             "args": [],
-            "cwd": "${workspaceRoot}\\Trees.Console",
+            "cwd": "${workspaceRoot}",
             "console": "internalConsole",
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart"

@@ -1,5 +1,3 @@
 TODO:
 - Add a positive planting flag for Points & Extra Plantings
-- Console scenario tester
-- End game when all lands are full and current player cannot replace a tree
 - Implement two-player mode

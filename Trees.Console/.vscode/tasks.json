@@ -7,7 +7,7 @@
         {
             "taskName": "build",
             "args": [
-                "${workspaceRoot}\\Trees.Console\\Trees.Console.csproj"
+                "${workspaceRoot}\\Trees.Console.csproj"
             ],
             "isBuildCommand": true,
             "problemMatcher": "$msCompile"
