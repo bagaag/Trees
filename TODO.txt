@@ -1,4 +1,4 @@
 TODO:
-- Scenario tester
+- Console scenario tester
 - End game when all lands are full and current player cannot replace a tree
 - Implement two-player mode

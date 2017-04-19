@@ -42,15 +42,5 @@ namespace Trees.Models.Events
         /// <param name="table"></param>
         public abstract void Stage(GamePlay game, Table table);
 
-        /// <summary>
-        /// Specifies a filter on whether planting belongs to the current player or not
-        /// </summary>
-        /// <param name="current">true to filter on current player</param>
-        /// <returns></returns>
-        public virtual BaseEvent WherePlayer(bool current)
-        {
-            _filters.Add(new PlayerFilter(current));
-            return this;
-        }
     }
 }
