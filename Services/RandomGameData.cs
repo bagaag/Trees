@@ -120,6 +120,84 @@ namespace Trees.Services
                 .WhereHabitat(HabitatField.Water, Conditions.Operators.GTE, 3)
             );
 
+            //TODO: Allow points filter to work for all players at once
+            _events.Add((new PointsEvent(
+                "Summer","Summer comes and shines on sun loving trees. You gain two points for each planting with sun of 3 or more."))
+                .WhereHabitat(HabitatField.Sun, Conditions.Operators.GTE, 3)
+                .WithPoints(2)
+                .ForEveryPlantingMatched()
+            );
+
+            _events.Add((new PointsEvent(
+                "Rain","A soft rain falls. You gain a point for each planting with water of 3 or more."))
+                .WhereHabitat(HabitatField.Water, Conditions.Operators.GTE, 3)
+                .ForEveryPlantingMatched()
+            );
+
+            _events.Add((new PointsEvent(
+                "Cold Winter","A cold winter costs you three points for each planting with temperature of 3 or more."))
+                .WhereHabitat(HabitatField.Temperature, Conditions.Operators.GTE, 3)
+                .ForEveryPlantingMatched()
+                .WithPoints(3)
+            );
+
+            _events.Add((new PointsEvent(
+                "Pine Flowering","The pines trees flower! A costly gamble. You gain three points for each pine tree planted."))
+                .WhereGenus("Pine")
+                .ForEveryPlantingMatched()
+                .WithPoints(3)
+            );
+
+            _events.Add((new PointsEvent(
+                "Pine Flowering","The pines trees flower! A costly gamble. You lose three points for each pine tree planted."))
+                .WhereGenus("Pine")
+                .ForEveryPlantingMatched()
+                .WithPoints(-3)
+            );
+
+            _events.Add((new PointsEvent(
+                "Acid Rain","Acid rain makes life for your trees that much harder and costs you 10 points."))
+                .WithPoints(-10)
+            );         
+
+            //TODO: Populate fun fact events
+            _events.Add((new EmptyEvent(
+                "Empty Event 1","Insert fun tree fact here."))
+            );
+            _events.Add((new EmptyEvent(
+                "Empty Event 2","Insert fun tree fact here."))
+            );
+            _events.Add((new EmptyEvent(
+                "Empty Event 3","Insert fun tree fact here."))
+            );
+            _events.Add((new EmptyEvent(
+                "Empty Event 4","Insert fun tree fact here."))
+            );
+            _events.Add((new EmptyEvent(
+                "Empty Event 5","Insert fun tree fact here."))
+            );
+            _events.Add((new EmptyEvent(
+                "Empty Event 6","Insert fun tree fact here."))
+            );
+            _events.Add((new EmptyEvent(
+                "Empty Event 7","Insert fun tree fact here."))
+            );
+            _events.Add((new EmptyEvent(
+                "Empty Event 8","Insert fun tree fact here."))
+            );
+            _events.Add((new EmptyEvent(
+                "Empty Event 9","Insert fun tree fact here."))
+            );
+            _events.Add((new EmptyEvent(
+                "Empty Event 10","Insert fun tree fact here."))
+            );
+            _events.Add((new EmptyEvent(
+                "Empty Event 11","Insert fun tree fact here."))
+            );
+            _events.Add((new EmptyEvent(
+                "Empty Event 12","Insert fun tree fact here."))
+            );
+
             Trees = new Deck<Tree>(_trees);
             Events = new Deck<BaseEvent>(_events);
             Lands = new Deck<Land>(_lands);

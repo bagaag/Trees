@@ -99,7 +99,7 @@ namespace Trees.Services
                 grove.Plantings.Add(planting);
                 // update table
                 ScorePlanting(grove, planting);
-                ScorePlayer(player);
+                player.CalculateScore();
                 SetCurrentPlayerPotentialScores(table);            
                 UpdateReplacementStatuses(table);
                 table.PlantingsRemaining--;
@@ -171,8 +171,8 @@ namespace Trees.Services
             table.TreeDeck.Return(targetPlanting.Tree);
             // update scores
             ScorePlanting(targetGrove, replacementPlanting);
-            ScorePlayer(targetPlanting.Player);
-            ScorePlayer(currentPlayer);
+            targetPlanting.Player.CalculateScore();
+            currentPlayer.CalculateScore();
             SetCurrentPlayerPotentialScores(table);
             UpdateReplacementStatuses(table);
         }
@@ -192,7 +192,7 @@ namespace Trees.Services
             targetPlanting.Player.Plantings.Remove(targetPlanting);
             table.TreeDeck.Return(targetPlanting.Tree);
             // update scores
-            ScorePlayer(targetPlanting.Player);
+            targetPlanting.Player.CalculateScore();
         }
 
         /// <summary>
@@ -267,17 +267,6 @@ namespace Trees.Services
                 ScorePlanting(grove, temp);
                 grove.CurrentPlayerPotentialScore = temp.Score;
             }
-        }
-
-        /// <summary>
-        /// Sums the scores of each planting and assigns to the player's score. Lower score is better.
-        /// </summary>
-        /// <param name="player"></param>
-        //TODO: Move this to Player.Score
-        void ScorePlayer(Player player) 
-        {
-            player.Score = 0;
-            player.Plantings.ForEach(p => { player.Score += p.Score; });
         }
 
         /// <summary>
